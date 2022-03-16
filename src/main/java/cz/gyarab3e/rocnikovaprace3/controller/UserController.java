@@ -19,6 +19,7 @@ import org.springframework.web.servlet.function.ServerRequest;
 import java.util.Date;
 
 import static cz.gyarab3e.rocnikovaprace3.controller.SecurityConstants.*;
+@CrossOrigin
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -31,6 +32,7 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
     }
+
 
     @PostMapping("/signUp")
     public void signUp(@RequestBody UserHolder holder){
@@ -46,9 +48,7 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
     }
-
     @PostMapping("/signIn")
-    @ResponseBody
     public ResponseEntity<String> signIn(@RequestBody UserHolder holder){
         try {
 
@@ -68,11 +68,10 @@ public class UserController {
 
             return ResponseEntity.ok()
                     .header(
-
-                            holder.getUsername()
+                            HEADER_STRING,
+                            token
                     )
-                    .body(
-                            token);
+                    .body(holder.getUsername());
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
